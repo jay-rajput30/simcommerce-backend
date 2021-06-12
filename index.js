@@ -4,7 +4,7 @@ const app = express();
 const product = require("./routes/product.route");
 const { initializeDBConnection } = require("./db/db.connect");
 
-// app.use(cors());
+// app.use(cors);
 app.use(express.json());
 initializeDBConnection();
 app.use("/product", product);
