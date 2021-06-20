@@ -1,9 +1,15 @@
 const express = require("express");
-
+const Product = require("../model/product.model");
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.status(200).json({ success: true, data: "test" });
+router.get("/", async (req, res) => {
+  try {
+    const products = await Product.find({});
+    console.log({ products });
+    res.status(200).json({ success: true, data: products });
+  } catch (err) {
+    res.status(503).json({ success: false });
+  }
 });
 
 router.post("/", (req, res) => {
