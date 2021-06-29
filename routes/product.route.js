@@ -2,12 +2,13 @@ const express = require("express");
 const Product = require("../model/product.model");
 const router = express.Router();
 
+//
+
 router.get("/", async (req, res) => {
   try {
     const products = await Product.find({});
-    console.log(JSON.parse(products));
-    const parsedData = JSON.parse(products);
-    res.status(200).json({ success: true, data: parsedData });
+    console.log(products);
+    res.status(200).json({ success: true, products });
   } catch (err) {
     res.status(503).json({ success: false, err });
   }

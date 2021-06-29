@@ -26,7 +26,7 @@ const productSchema = new Schema({
     type: String,
     required: "name is required",
   },
-  offers: [],
+  offers: [String],
   outOfStock: {
     type: Boolean,
     required: "out of stock option is required",
