@@ -38,11 +38,14 @@ router.post("/", async (req, res) => {
     res.status(200).json({ success: true, user });
   } catch (e) {
     res.status(503).json({ success: false, err });
-  }
+  }   
 });
 
-router.post("/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
+    const userId = req.params.id;
+    const deletedUser = new User()
+    
   } catch (err) {
     res.status(503).json({ success: false, err });
   }
