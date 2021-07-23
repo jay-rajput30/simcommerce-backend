@@ -26,11 +26,12 @@ router.post("/:id", async (req, res) => {
   try {
     const cartId = req.params.id;
     const { productId } = req.body;
-    const newCartItem = await Wishlist.findById(`${cartId}`);
-    // console.log(newCartItem);
+    const newCartItem = await Cart.findById(`${cartId}`);
     newCartItem.products.push(productId);
+    newCartItem.quantity = newCartItem.products.length;
     await newCartItem.save();
-    res.status(200).json({ success: true, newWishListItem });
+    console.log(newCartItem.quantity);
+    res.status(200).json({ success: true, newCartItem });
   } catch (err) {
     res.status(503).json({ success: false, err });
   }
