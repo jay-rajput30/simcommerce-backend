@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const wishlistId = req.params.id;
-    const wishlistItem = await Wishlist.findById(`${wishlistId}`);
+    const wishlistItem = await Wishlist.findOne({ uid: `${wishlistId}` });
     res.status(200).json({ success: true, wishlistItem });
   } catch (err) {
     res.status(503).json({ success: false, err });
@@ -26,7 +26,7 @@ router.post("/:id", async (req, res) => {
   try {
     const wishlistId = req.params.id;
     const { productId } = req.body;
-    const newWishListItem = await Wishlist.findById(`${wishlistId}`);
+    const newWishListItem = await Wishlist.findOne(`${wishlistId}`);
     // console.log(newWishListItem);
     newWishListItem.products.push(productId);
     await newWishListItem.save();
