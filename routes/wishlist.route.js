@@ -36,4 +36,26 @@ router.post("/:id", async (req, res) => {
   }
 });
 
+router.post("/delete/:id", async (req, res) => {
+  try {
+    const wishlistId = req.params.id;
+    const { removeProductId } = req.body;
+    const wishlistItem = await Wishlist.findById(`${wishlistId}`);
+
+    const updatedWishlistItems = wishlistItem.products.filter((item) => {
+      return item.toString() !== removeProductId;
+      updatedWishlistItems.save();
+      console.log(item);
+    });
+
+    wishlistItem = {
+      ...wishlistItem,
+      products: [...wishlistItem.products, updatedWishlistItems],
+    };
+    res.status(200).json({ success: true, wishlistItem });
+  } catch (err) {
+    res.status(503).json({ success: false, err });
+  }
+});
+
 module.exports = router;
