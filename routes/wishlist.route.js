@@ -22,6 +22,16 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.post("/:id", async (req, res, next) => {
+  const wishlistId = req.params.id;
+  const { productId } = req.body;
+  const newWishListItem = await Wishlist.findById(`${wishlistId}`);
+  const productPresent = newWishListItem.products.findIndex(
+    (item) => productId === item
+  );
+  console.log("inside post route middleware");
+  next();
+});
 router.post("/:id", async (req, res) => {
   try {
     const wishlistId = req.params.id;
