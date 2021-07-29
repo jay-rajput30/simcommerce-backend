@@ -29,19 +29,12 @@ router.post("/:id", async (req, res) => {
     const { productId } = req.body;
     const id = mongoose.mongo.ObjectId(productId);
     const newWishListItem = await Wishlist.findById(`${wishlistId}`);
-    const productPresent = newWishListItem.products.findIndex(
-      (item) => id == item
-    );
-    console.log(typeof newWishListItem.products[0].toString(), productPresent);
-    // if (productPresent >= 0) {
-    //   console.log({ productPresent }, "product present");
-    //   res.status(200).json({ success: true, newWishListItem });
-    // } else {
-    //   console.log({ newWishListItem, productPresent }, "product not present");
+    // const productPresent = newWishListItem.products.findIndex(
+    //   (item) => id == item
+    // );
+    // console.log(typeof newWishListItem.products[0].toString(), productPresent);
     newWishListItem.products.push(productId);
     await newWishListItem.save();
-    res.status(200).json({ success: true, newWishListItem });
-    // }
     res.status(200).json({ success: true, newWishListItem });
   } catch (err) {
     res.status(503).json({ success: false, err });
