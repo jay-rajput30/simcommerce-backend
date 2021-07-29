@@ -7,15 +7,15 @@ router.get("/", async (req, res) => {
     const carts = await Cart.find({});
 
     res.status(200).json({ success: true, carts });
-  } catch (e) {
-    res.status(503).json({ success: false, e });
+  } catch (err) {
+    res.status(503).json({ success: false, err });
   }
 });
 
 router.get("/:id", async (req, res) => {
   try {
-    const cartId = req.params.id;
-    const cartItem = await Cart.findById(`${cartId}`);
+    const userId = req.params.id;
+    const cartItem = await Cart.findOne({ uid: `${userId}` });
     res.status(200).json({ success: true, cartItem });
   } catch (err) {
     res.status(503).json({ success: false, err });
@@ -26,12 +26,11 @@ router.post("/:id", async (req, res) => {
   try {
     const cartId = req.params.id;
     const { productId } = req.body;
-    const newCartItem = await Cart.findById(`${cartId}`);
-    newCartItem.products.push(productId);
-    newCartItem.quantity = newCartItem.products.length;
-    await newCartItem.save();
-    console.log(newCartItem.quantity);
-    res.status(200).json({ success: true, newCartItem });
+    const cartItem = await Cart.findById(`${cartId}`);
+    cartItem.products.push(productId);
+    cartItem.quantity = cartItem.products.length;
+    await cartItem.save();
+    res.status(200).json({ success: true, cartItem });
   } catch (err) {
     res.status(503).json({ success: false, err });
   }

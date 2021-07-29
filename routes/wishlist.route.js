@@ -27,7 +27,7 @@ router.post("/:id", async (req, res) => {
   try {
     const wishlistId = req.params.id;
     const { productId } = req.body;
-    const id = mongoose.mongo.ObjectId(productId);
+    // const id = mongoose.mongo.ObjectId(productId);
     const newWishListItem = await Wishlist.findById(`${wishlistId}`);
     // const productPresent = newWishListItem.products.findIndex(
     //   (item) => id == item
