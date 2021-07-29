@@ -1,6 +1,7 @@
 const express = require("express");
 const Wishlist = require("../model/wishlist.model");
 const router = express.Router();
+const mongoose = require("mongoose");
 
 router.get("/", async (req, res) => {
   try {
@@ -14,32 +15,33 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const wishlistId = req.params.id;
-    const wishlistItem = await Wishlist.findOne({ uid: `${wishlistId}` });
+    const userId = req.params.id;
+    const wishlistItem = await Wishlist.findOne({ uid: `${userId}` });
     res.status(200).json({ success: true, wishlistItem });
   } catch (err) {
     res.status(503).json({ success: false, err });
   }
 });
 
-router.post("/:id", async (req, res, next) => {
-  const wishlistId = req.params.id;
-  const { productId } = req.body;
-  const newWishListItem = await Wishlist.findById(`${wishlistId}`);
-  const productPresent = newWishListItem.products.findIndex(
-    (item) => productId === item
-  );
-  console.log("inside post route middleware");
-  next();
-});
 router.post("/:id", async (req, res) => {
   try {
     const wishlistId = req.params.id;
     const { productId } = req.body;
+    const id = mongoose.mongo.ObjectId(productId);
     const newWishListItem = await Wishlist.findById(`${wishlistId}`);
-    // console.log(newWishListItem);
+    const productPresent = newWishListItem.products.findIndex(
+      (item) => id == item
+    );
+    console.log(typeof newWishListItem.products[0].toString(), productPresent);
+    // if (productPresent >= 0) {
+    //   console.log({ productPresent }, "product present");
+    //   res.status(200).json({ success: true, newWishListItem });
+    // } else {
+    //   console.log({ newWishListItem, productPresent }, "product not present");
     newWishListItem.products.push(productId);
     await newWishListItem.save();
+    res.status(200).json({ success: true, newWishListItem });
+    // }
     res.status(200).json({ success: true, newWishListItem });
   } catch (err) {
     res.status(503).json({ success: false, err });
