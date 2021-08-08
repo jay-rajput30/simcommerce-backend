@@ -36,4 +36,22 @@ router.post("/:id", async (req, res) => {
   }
 });
 
+router.delete("/:id", async (req, res) => {
+  try {
+    const cartId = req.params.id;
+    const { removeProductId } = req.body;
+    const cartItem = await Cart.findById(`${cartId}`);
+    const index = cartItem.products.findIndex(
+      (productId) => productId === removeProductId
+    );
+    cartItem.products.splice(index, 1);
+    cartItem.quantity = cartItem.products.length;
+    await cartItem.save();
+    console.log(cartItem);
+    res.status(200).json({ success: true, cartItem });
+  } catch (err) {
+    res.status(503).json({ succes: false, err });
+  }
+});
+
 module.exports = router;
