@@ -17,6 +17,16 @@ router.get("/:id", async (req, res) => {
   try {
     const userId = req.params.id;
     const wishlistItem = await Wishlist.findOne({ uid: `${userId}` });
+    console.log(wishlistItem);
+
+    // const filteredProduct = products.reduce((acc, cur) => {
+    //   if (!acc[cur]) {
+    //     acc[cur] = 1;
+    //   }
+    //   return acc;
+    // }, {});
+    // wishlistItem.__v = null;
+    // let filteredWishListItem = { products: filteredProduct, uid, id };
     res.status(200).json({ success: true, wishlistItem });
   } catch (err) {
     res.status(503).json({ success: false, err });
@@ -32,7 +42,7 @@ router.post("/:id", async (req, res) => {
     // const productPresent = newWishListItem.products.findIndex(
     //   (item) => id == item
     // );
-    // console.log(typeof newWishListItem.products[0].toString(), productPresent);
+    // console.log(newWishListItem.products, productId.toString());
     newWishListItem.products.push(productId);
     await newWishListItem.save();
     res.status(200).json({ success: true, newWishListItem });
