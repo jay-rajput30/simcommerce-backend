@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", validateUser, async (req, res) => {
   try {
     const userId = req.params.id;
     const user = await User.findById(`${userId}`);
@@ -60,4 +60,16 @@ router.delete("/:id", async (req, res) => {
     res.status(503).json({ success: false, err });
   }
 });
+
+function validateUser(err, req, res, next) {
+  const { name, email, password } = req.body;
+  console.log({ name, email });
+  if (name === null) {
+    throw new Error("invalid details");
+    next(err);
+  } else {
+    next();
+  }
+}
+
 module.exports = router;
