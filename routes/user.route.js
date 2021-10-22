@@ -5,71 +5,18 @@ const router = express.Router();
 const User = require("../model/user.model");
 const Wishlist = require("../model/wishlist.model");
 const Cart = require("../model/cart.model");
+const {
+  getAllUsers,
+  getUser,
+  addUser,
+} = require("../controllers/user.controller.js");
 
-router.get("/", async (req, res) => {
-  try {
-    const users = await User.find({});
-    res.status(200).json({ success: true, users });
-  } catch (err) {
-    res.status(503).json({ success: false, err });
-  }
-});
+router.get("/", getAllUsers);
 
-router.get("/:id", validateUser, async (req, res) => {
-  try {
-    const userId = req.params.id;
-    const user = await User.findById(`${userId}`);
-    if (user) {
-      res.status(200).json({ success: true, user });
-    } else {
-      res.status(404).json({ success: false, error: "user does note exists" });
-    }
-  } catch (err) {
-    res.status(503).json({ success: false, err });
-  }
-});
+router.get("/:id", getUser);
 
-router.post("/", async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-    const user = new User({ name, email, password });
+router.post("/", addUser);
 
-    const newUser = await user.save({ name, email, password });
-    console.log(newUser._id);
-
-    let wishlist = { uid: newUser._id, products: [] };
-    let cart = { uid: newUser._id, products: [], quantity: 0 };
-
-    const newWishlist = new Wishlist(wishlist);
-    const newCart = new Cart(cart);
-
-    await newWishlist.save();
-    await newCart.save();
-
-    res.status(200).json({ success: true, user });
-  } catch (e) {
-    res.status(503).json({ success: false, e });
-  }
-});
-
-router.delete("/:id", async (req, res) => {
-  try {
-    const userId = req.params.id;
-    const deletedUser = new User();
-  } catch (err) {
-    res.status(503).json({ success: false, err });
-  }
-});
-
-function validateUser(err, req, res, next) {
-  const { name, email, password } = req.body;
-  console.log({ name, email });
-  if (name === null) {
-    throw new Error("invalid details");
-    next(err);
-  } else {
-    next();
-  }
-}
+// router.delete("/:id", deleteUser);
 
 module.exports = router;

@@ -16,7 +16,7 @@ app.use("/user", user);
 app.use("/wishlist", wishlist);
 app.use("/cart", cart);
 app.get("/", (req, res) => {
-  res.send("welcome the simcommerce default route");
+  res.send("oops, you hit the wrong api.  this is the default route");
 });
 
 app.listen(3001, () => {
