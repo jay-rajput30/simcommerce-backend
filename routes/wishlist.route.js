@@ -16,6 +16,6 @@ router.get("/:id", getWishlist);
 
 router.post("/:id", addToWishlist);
 
-router.delete("/:id", removeFromWishlist);
+// router.delete("/:id", removeFromWishlist);
 
 module.exports = router;
