@@ -15,10 +15,17 @@ const getAllCarts = async (req, res) => {
 const getCart = async (req, res) => {
   try {
     const userId = req.params.id;
-    const cartItem = await Cart.findOne({ uid: `${userId}` });
+    const cartItem = await Cart.findOne({ uid: `${userId}` }).populate(
+      "cartProducts.productId"
+    );
+    console.log({ cartItem });
+    // let populatedCart = cartItem.cartProducts.forEach((item) =>
+    //   item.execPopulate("productId")
+    // );
     res.status(200).json({ success: true, cartItem });
   } catch (err) {
-    res.status(503).json({ success: false, err });
+    console.log({ err });
+    res.json({ success: false, err });
   }
 };
 
@@ -26,11 +33,26 @@ const addToCart = async (req, res) => {
   try {
     const cartId = req.params.id;
     const { productId } = req.body;
-    const cartItem = await Cart.findById(`${cartId}`);
-    cartItem.products.push(productId);
-    cartItem.quantity = cartItem.products.length;
-    await cartItem.save();
-    res.status(200).json({ success: true, cartItem });
+    const cart = await Cart.findById(`${cartId}`).populate(
+      "cartProducts.productId"
+    );
+    const cartItem = await cart.cartProducts.find(
+      (item) => item.productId._id.toString() == productId.toString()
+    );
+    if (cartItem) {
+      cart.cartProducts.forEach((item) => {
+        if (item.productId._id.toString() == productId.toString()) {
+          item.quantity = item.quantity + 1;
+        }
+      });
+    } else {
+      cart.cartProducts.push({ productId, quantity: 1 });
+      // cartItem.quantity = cartItem.products.length;
+    }
+
+    await cart.save();
+
+    res.status(200).json({ success: true, cartItem: cart });
   } catch (err) {
     res.status(503).json({ success: false, err });
   }
@@ -38,16 +60,17 @@ const addToCart = async (req, res) => {
 
 const deleteFromCart = async (req, res) => {
   try {
+    console.log("inside remove cart controller");
     const cartId = req.params.id;
     const { removeProductId } = req.body;
     const cartItem = await Cart.findById(`${cartId}`);
     const index = cartItem.products.findIndex(
-      (productId) => productId === removeProductId
+      (productId) => productId.toString() == removeProductId.toString()
     );
     cartItem.products.splice(index, 1);
     cartItem.quantity = cartItem.products.length;
     await cartItem.save();
-    console.log(cartItem);
+    console.log({ cartItem, index });
     res.status(200).json({ success: true, cartItem });
   } catch (err) {
     res.status(503).json({ succes: false, err });
