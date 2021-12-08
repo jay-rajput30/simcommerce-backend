@@ -60,17 +60,34 @@ const addToCart = async (req, res) => {
 
 const deleteFromCart = async (req, res) => {
   try {
-    console.log("inside remove cart controller");
     const cartId = req.params.id;
     const { removeProductId } = req.body;
-    const cartItem = await Cart.findById(`${cartId}`);
-    const index = cartItem.products.findIndex(
-      (productId) => productId.toString() == removeProductId.toString()
+    const cartItem = await Cart.findById(`${cartId}`).populate(
+      "cartProducts.productId"
     );
-    cartItem.products.splice(index, 1);
-    cartItem.quantity = cartItem.products.length;
+    const cartProductIdx = cartItem.cartProducts.findIndex(
+      ({ productId: { _id } }) => _id == removeProductId
+    );
+
+    if (cartProductIdx !== -1) {
+      const productPresent = cartItem.cartProducts.find(
+        (item) => item.productId._id.toString() == removeProductId.toString()
+      );
+      // console.log({ productPresent });
+      if (productPresent.quantity > 1) {
+        cartItem.cartProducts[cartProductIdx].quantity -= 1;
+        // cartItem.cartProducts.splice(cartProductIdx, 1);
+      } else {
+        cartItem.cartProducts = cartItem.cartProducts.filter(
+          (item) => item.productId._id.toString() !== removeProductId.toString()
+        );
+      }
+    }
+
+    console.log({ cartItem });
+    // cartItem.cartProducts.quantity = cartItem.products.length;
     await cartItem.save();
-    console.log({ cartItem, index });
+    // console.log({ cartItem, index });
     res.status(200).json({ success: true, cartItem });
   } catch (err) {
     res.status(503).json({ succes: false, err });
