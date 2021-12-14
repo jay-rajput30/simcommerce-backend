@@ -13,12 +13,14 @@ const getAllUsers = async (req, res) => {
 
 const getUser = async (req, res) => {
   try {
-    const userId = req.params.id;
-    const user = await User.findById(`${userId}`);
-    if (user) {
-      res.status(200).json({ success: true, user });
+    // const userId = req.params.id;
+    const { username, password } = req.body;
+    const user = await User.findOne({ username: username.toString() });
+    console.log({ user });
+    if (user && user.username === username && user.password === password) {
+      res.status(200).json({ success: true, userId: user._id });
     } else {
-      res.status(404).json({ success: false, error: "user does note exists" });
+      res.status(404).json({ success: false, error: "user not found" });
     }
   } catch (err) {
     res.status(503).json({ success: false, err });
