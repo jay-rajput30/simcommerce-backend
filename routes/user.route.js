@@ -11,9 +11,9 @@ const {
   addUser,
 } = require("../controllers/user.controller.js");
 
-router.get("/", getAllUsers);
+router.post("/validate", getUser);
 
-router.get("/:id", getUser);
+router.get("/", getAllUsers);
 
 router.post("/", addUser);
 

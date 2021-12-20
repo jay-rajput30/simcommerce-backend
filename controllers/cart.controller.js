@@ -18,13 +18,13 @@ const getCart = async (req, res) => {
     const cartItem = await Cart.findOne({ uid: `${userId}` }).populate(
       "cartProducts.productId"
     );
-    console.log({ cartItem });
+    // console.log({ cartItem });
     // let populatedCart = cartItem.cartProducts.forEach((item) =>
     //   item.execPopulate("productId")
     // );
     res.status(200).json({ success: true, cartItem });
   } catch (err) {
-    console.log({ err });
+    // console.log({ err });
     res.json({ success: false, err });
   }
 };
@@ -84,7 +84,7 @@ const deleteFromCart = async (req, res) => {
       }
     }
 
-    console.log({ cartItem });
+    // console.log({ cartItem });
     // cartItem.cartProducts.quantity = cartItem.products.length;
     await cartItem.save();
     // console.log({ cartItem, index });

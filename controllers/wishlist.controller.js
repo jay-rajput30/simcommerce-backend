@@ -31,12 +31,12 @@ const addToWishlist = async (req, res) => {
     let isProductPresent = userwishlist.products.find(
       (temp) => temp.toString() === productId.toString()
     );
-    console.log({ isProductPresent, wishlistId, userwishlist });
+    // console.log({ isProductPresent, wishlistId, userwishlist });
     if (isProductPresent) {
       const index = userwishlist.products.findIndex(
         (removeProductId) => productId.toString() === removeProductId.toString()
       );
-      console.log({ index });
+      // console.log({ index });
       userwishlist.products.splice(index, 1);
       await userwishlist.save();
 

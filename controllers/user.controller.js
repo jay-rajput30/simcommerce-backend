@@ -14,11 +14,17 @@ const getAllUsers = async (req, res) => {
 const getUser = async (req, res) => {
   try {
     // const userId = req.params.id;
+    console.log("inside get user controller method");
     const { username, password } = req.body;
-    const user = await User.findOne({ username: username.toString() });
-    console.log({ user });
-    if (user && user.username === username && user.password === password) {
-      res.status(200).json({ success: true, userId: user._id });
+    const user = await User.findOne({ name: username.toString() });
+    // console.log({ user });
+    if (user && user.name === username && user.password === password) {
+      const cartItem = await Cart.findOne({ uid: `${user._id}` });
+      const wishlistItem = await Wishlist.findOne({ uid: `${user._id}` });
+      console.log(true);
+      res
+        .status(200)
+        .json({ success: true, userId: user._id, cartItem, wishlistItem });
     } else {
       res.status(404).json({ success: false, error: "user not found" });
     }
@@ -33,10 +39,10 @@ const addUser = async (req, res) => {
     const user = new User({ name, email, password });
 
     const newUser = await user.save({ name, email, password });
-    console.log(newUser._id);
+    // console.log(newUser._id);
 
     let createWishlist = { uid: newUser._id, products: [] };
-    let createCart = { uid: newUser._id, products: [], quantity: 0 };
+    let createCart = { uid: newUser._id, cartProducts: [] };
 
     const newWishlist = new Wishlist(createWishlist);
     await newWishlist.save();
