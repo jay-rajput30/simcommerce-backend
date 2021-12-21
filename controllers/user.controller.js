@@ -1,6 +1,7 @@
 const User = require("../model/user.model");
 const Wishlist = require("../model/wishlist.model");
 const Cart = require("../model/cart.model");
+const bcrypt = require("bcrypt");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -13,15 +14,12 @@ const getAllUsers = async (req, res) => {
 
 const getUser = async (req, res) => {
   try {
-    // const userId = req.params.id;
-    console.log("inside get user controller method");
     const { username, password } = req.body;
     const user = await User.findOne({ name: username.toString() });
     // console.log({ user });
     if (user && user.name === username && user.password === password) {
       const cartItem = await Cart.findOne({ uid: `${user._id}` });
       const wishlistItem = await Wishlist.findOne({ uid: `${user._id}` });
-      console.log(true);
       res
         .status(200)
         .json({ success: true, userId: user._id, cartItem, wishlistItem });
@@ -36,33 +34,45 @@ const getUser = async (req, res) => {
 const addUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    const user = new User({ name, email, password });
+    bcrypt.genSalt(10, async (err, salt) => {
+      bcrypt.hash(password, salt, async (err, hash) => {
+        let newPassword = hash;
+        const user = new User({ name, email, password: newPassword });
 
-    const newUser = await user.save({ name, email, password });
-    // console.log(newUser._id);
+        // { name, email, password: newPassword }
+        await user.save();
+        console.log({ newPassword, user });
+        let createWishlist = { uid: user._id, products: [] };
+        let createCart = { uid: user._id, cartProducts: [] };
 
-    let createWishlist = { uid: newUser._id, products: [] };
-    let createCart = { uid: newUser._id, cartProducts: [] };
+        const newWishlist = new Wishlist(createWishlist);
+        await newWishlist.save();
 
-    const newWishlist = new Wishlist(createWishlist);
-    await newWishlist.save();
+        const newCart = new Cart(createCart);
+        await newCart.save();
 
-    const newCart = new Cart(createCart);
-    await newCart.save();
-
-    res.status(200).json({ success: true, user });
+        res.status(200).json({ success: true, user });
+      });
+    });
   } catch (e) {
     res.status(503).json({ success: false, e });
   }
 };
 
-// const deleteUser = async (req, res) => {
-//   try {
-//     const userId = req.params.id;
-//     const deletedUser = new User();
-//   } catch (err) {
-//     res.status(503).json({ success: false, err });
-//   }
-// };
+const getUserCollection = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    // console.log(userId);
+    const cartItem = await Cart.findOne({ uid: `${userId}` });
+    const wishlistItem = await Wishlist.findOne({ uid: `${userId}` });
+    res.status(200).json({
+      success: true,
+      cartId: cartItem._id,
+      wishlistId: wishlistItem._id,
+    });
+  } catch (err) {
+    res.status(504).json({ success: false, err });
+  }
+};
 
-module.exports = { getAllUsers, getUser, addUser };
+module.exports = { getAllUsers, getUser, addUser, getUserCollection };

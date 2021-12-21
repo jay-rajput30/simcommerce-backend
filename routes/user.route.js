@@ -9,9 +9,12 @@ const {
   getAllUsers,
   getUser,
   addUser,
+  getUserCollection,
 } = require("../controllers/user.controller.js");
 
 router.post("/validate", getUser);
+
+router.get("/usercollection/:id", getUserCollection);
 
 router.get("/", getAllUsers);
 
