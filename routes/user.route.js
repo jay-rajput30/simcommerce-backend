@@ -1,10 +1,11 @@
 const express = require("express");
 const app = express();
 const router = express.Router();
+const loginVerify = require("../utils/loginAuth");
 
-const User = require("../model/user.model");
-const Wishlist = require("../model/wishlist.model");
-const Cart = require("../model/cart.model");
+// const User = require("../model/user.model");
+// const Wishlist = require("../model/wishlist.model");
+// const Cart = require("../model/cart.model");
 const {
   getAllUsers,
   getUser,
@@ -12,7 +13,7 @@ const {
   getUserCollection,
 } = require("../controllers/user.controller.js");
 
-router.post("/validate", getUser);
+router.post("/validate", loginVerify, getUser);
 
 router.get("/usercollection/:id", getUserCollection);
 

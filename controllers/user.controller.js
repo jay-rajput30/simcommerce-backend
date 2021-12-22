@@ -14,18 +14,29 @@ const getAllUsers = async (req, res) => {
 
 const getUser = async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const user = await User.findOne({ name: username.toString() });
+    const cartItem = await Cart.findOne({ uid: `${req.userFound._id}` });
+    const wishlistItem = await Wishlist.findOne({
+      uid: `${req.userFound._id}`,
+    });
+    res.status(200).json({
+      success: true,
+      userId: req.userFound._id,
+      cartItem,
+      wishlistItem,
+      token: req.token,
+    });
+    // const { username, password }req}.body;
+    // const user = await User.findOne({ name: username.toString() });
     // console.log({ user });
-    if (user && user.name === username && user.password === password) {
-      const cartItem = await Cart.findOne({ uid: `${user._id}` });
-      const wishlistItem = await Wishlist.findOne({ uid: `${user._id}` });
-      res
-        .status(200)
-        .json({ success: true, userId: user._id, cartItem, wishlistItem });
-    } else {
-      res.status(404).json({ success: false, error: "user not found" });
-    }
+    // if (user && user.name === username && user.password === password) {
+    // const cartItem = await Cart.findOne({ uid: `${user._id}` });
+    // const wishlistItem = await Wishlist.findOne({ uid: `${user._id}` });
+    //   res
+    //     .status(200)
+    //     .json({ success: true, userId: user._id, cartItem, wishlistItem });
+    // } else {
+    //   res.status(404).json({ success: false, error: "user not found" });
+    // }
   } catch (err) {
     res.status(503).json({ success: false, err });
   }
