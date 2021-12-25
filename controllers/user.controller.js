@@ -72,8 +72,9 @@ const addUser = async (req, res) => {
 
 const getUserCollection = async (req, res) => {
   try {
-    const userId = req.params.id;
+    // const userId = req.params.id;
     // console.log(userId);
+    const { userId } = req.data;
     const cartItem = await Cart.findOne({ uid: `${userId}` });
     const wishlistItem = await Wishlist.findOne({ uid: `${userId}` });
     res.status(200).json({

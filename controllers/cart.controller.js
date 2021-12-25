@@ -31,9 +31,9 @@ const getCart = async (req, res) => {
 
 const addToCart = async (req, res) => {
   try {
-    const cartId = req.params.id;
+    const { userId } = req.data;
     const { productId } = req.body;
-    const cart = await Cart.findById(`${cartId}`).populate(
+    const cart = await Cart.findOne(`${userId}`).populate(
       "cartProducts.productId"
     );
     const cartItem = await cart.cartProducts.find(

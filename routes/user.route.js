@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const router = express.Router();
 const loginVerify = require("../utils/loginAuth");
+const authenticateRoute = require("../utils/routeAuth");
 
 // const User = require("../model/user.model");
 // const Wishlist = require("../model/wishlist.model");
@@ -15,7 +16,7 @@ const {
 
 router.post("/validate", loginVerify, getUser);
 
-router.get("/usercollection/:id", getUserCollection);
+router.get("/usercollection/", authenticateRoute, getUserCollection);
 
 router.get("/", getAllUsers);
 

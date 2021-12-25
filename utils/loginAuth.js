@@ -8,9 +8,13 @@ const loginVerify = async (req, res, next) => {
     const userFound = await User.findOne({ name: username.toString() });
     bcrypt.compare(password, userFound.password, (err, result) => {
       if (result) {
-        const userDetails = { name: userFound.name, email: userFound.email };
+        const userDetails = {
+          userId: userFound._id,
+          name: userFound.name,
+          email: userFound.email,
+        };
         const token = jwt.sign(userDetails, process.env.MY_SECRET_KEY, {
-          expiresIn: "24h",
+          expiresIn: "600000ms",
         });
 
         userFound.password = undefined;

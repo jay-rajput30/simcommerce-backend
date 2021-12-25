@@ -13,7 +13,7 @@ const getAllWishlists = async (req, res) => {
 };
 const getWishlist = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const { userId } = req.data;
     const wishlistItem = await Wishlist.findOne({ uid: `${userId}` });
 
     res.status(200).json({ success: true, wishlistItem });
@@ -24,14 +24,14 @@ const getWishlist = async (req, res) => {
 
 const addToWishlist = async (req, res) => {
   try {
-    const wishlistId = req.params.id;
+    const { userId } = req.data;
     const { productId } = req.body;
-
-    const userwishlist = await Wishlist.findById(`${wishlistId}`);
+    console.log({ token: req.token, userId, productId });
+    const userwishlist = await Wishlist.findOne(`${userId}`);
     let isProductPresent = userwishlist.products.find(
       (temp) => temp.toString() === productId.toString()
     );
-    // console.log({ isProductPresent, wishlistId, userwishlist });
+
     if (isProductPresent) {
       const index = userwishlist.products.findIndex(
         (removeProductId) => productId.toString() === removeProductId.toString()

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-// const Cart = require("../model/cart.model");
+const authenticateRoute = require("../utils/routeAuth");
 
 const {
   getAllCarts,
@@ -13,7 +13,7 @@ router.get("/", getAllCarts);
 
 router.get("/:id", getCart);
 
-router.post("/:id", addToCart);
+router.post("/:id", authenticateRoute, addToCart);
 
 router.post(
   "/remove/:id",

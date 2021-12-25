@@ -1,7 +1,7 @@
 const express = require("express");
 // const Wishlist = require("../model/wishlist.model");
 const router = express.Router();
-// const mongoose = require("mongoose");
+const authenticateRoute = require("../utils/routeAuth");
 
 const {
   getAllWishlists,
@@ -12,9 +12,9 @@ const {
 
 router.get("/", getAllWishlists);
 
-router.get("/:id", getWishlist);
+router.get("/singlewishlist", authenticateRoute, getWishlist);
 
-router.post("/:id", addToWishlist);
+router.post("/:id", authenticateRoute, addToWishlist);
 
 // router.delete("/:id", removeFromWishlist);
 
