@@ -19,6 +19,6 @@ app.get("/", (req, res) => {
   res.send("oops, you hit the wrong api.  this is the default route");
 });
 
-app.listen(3001, () => {
+app.listen(process.env.PORT, () => {
   console.log("server started");
 });

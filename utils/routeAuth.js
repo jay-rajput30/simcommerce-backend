@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const authenticateRoute = async (req, res, next) => {
   const token = req.headers.authorization;
-  console.log({ header: req.headers });
+  // console.log({ header: req.headers.authorization });
   if (!token) {
     res.status(401).json({ success: false, message: "user not authenticated" });
   }
@@ -10,6 +10,7 @@ const authenticateRoute = async (req, res, next) => {
     const data = jwt.verify(token, process.env.MY_SECRET_KEY);
     req.data = data;
     req.token = token;
+    // console.log({ token, data });
     next();
   } catch (err) {
     console.log(err);

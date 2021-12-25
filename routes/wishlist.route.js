@@ -14,8 +14,9 @@ router.get("/", getAllWishlists);
 
 router.get("/singlewishlist", authenticateRoute, getWishlist);
 
-router.post("/:id", authenticateRoute, addToWishlist);
+router.post("/", authenticateRoute, addToWishlist);
 
+router.post("/removeitem", authenticateRoute, removeFromWishlist);
 // router.delete("/:id", removeFromWishlist);
 
 module.exports = router;

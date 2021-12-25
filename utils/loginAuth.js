@@ -20,7 +20,6 @@ const loginVerify = async (req, res, next) => {
         userFound.password = undefined;
         req.userFound = userFound;
         req.token = token;
-        // console.log(token);
         next();
       } else {
         res.status(401).json({ success: false, err });

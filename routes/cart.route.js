@@ -13,12 +13,8 @@ router.get("/", getAllCarts);
 
 router.get("/:id", getCart);
 
-router.post("/:id", authenticateRoute, addToCart);
+router.post("/", authenticateRoute, addToCart);
 
-router.post(
-  "/remove/:id",
-  // () => console.log("delete cart route"),
-  deleteFromCart
-);
+router.post("/remove", authenticateRoute, deleteFromCart);
 
 module.exports = router;
