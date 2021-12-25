@@ -15,8 +15,17 @@ app.use("/product", product);
 app.use("/user", user);
 app.use("/wishlist", wishlist);
 app.use("/cart", cart);
+
+/**
+ * 404 Route Handler
+ * Note: DO not MOVE. This should be the last route
+ */
 app.get("/", (req, res) => {
-  res.send("oops, you hit the wrong api.  this is the default route");
+  res
+    .status(404)
+    .send({
+      message: "404 api not found.  oops, you hit the wrong api.  please check",
+    });
 });
 
 app.listen(process.env.PORT, () => {
