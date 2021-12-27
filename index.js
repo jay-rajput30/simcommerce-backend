@@ -6,6 +6,8 @@ const product = require("./routes/product.route");
 const user = require("./routes/user.route");
 const cart = require("./routes/cart.route");
 const wishlist = require("./routes/wishlist.route");
+const port = 3003;
+
 app.use(cors());
 app.use(express.json());
 
@@ -21,13 +23,11 @@ app.use("/cart", cart);
  * Note: DO not MOVE. This should be the last route
  */
 app.get("/", (req, res) => {
-  res
-    .status(404)
-    .send({
-      message: "404 api not found.  oops, you hit the wrong api.  please check",
-    });
+  res.status(404).send({
+    message: "404 api not found.  oops, you hit the wrong api.  please check",
+  });
 });
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || port, () => {
   console.log("server started");
 });
