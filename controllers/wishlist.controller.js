@@ -55,7 +55,6 @@ const addToWishlist = async (req, res) => {
 };
 
 const removeFromWishlist = async (req, res) => {
-  // console.log({ data: req.data });
   try {
     const { userId } = req.data;
     const { removeProductId } = req.body;
