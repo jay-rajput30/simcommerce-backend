@@ -6,7 +6,7 @@ const product = require("./routes/product.route");
 const user = require("./routes/user.route");
 const cart = require("./routes/cart.route");
 const wishlist = require("./routes/wishlist.route");
-const port = 3003;
+const port = process.env.PORT || 3003;
 
 app.use(cors());
 app.use(express.json());
